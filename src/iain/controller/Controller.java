@@ -102,6 +102,9 @@ public class Controller implements CS355Controller {
 			currentShape = Model.SINGLETON.selectShape(start);
 			if (currentShape != null) {
 				currentIndex = currentShape.getIndex();
+				currentColor = currentShape.getColor();
+				GUIFunctions.changeSelectedColor(currentColor);
+				
 			}else {
 				currentIndex = -1;
 			}
