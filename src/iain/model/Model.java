@@ -137,6 +137,15 @@ public class Model extends CS355Drawing {
 		this.notifyObservers();
 	}
 	
+	public boolean pointInShape(Point2D.Double point, Shape s) {
+		Point2D.Double objCoord = new Point2D.Double(0, 0);
+		AffineTransform worldToObj = new AffineTransform();
+		worldToObj.rotate(s.getRotation() * -1);
+		worldToObj.translate(s.getCenter().x * -1, s.getCenter().y * -1);
+		worldToObj.transform(point, objCoord);
+		return s.pointInHandle(objCoord, SELECT_TOLERANCE);
+	}
+	
 	public Shape selectShape(Point2D.Double point) {
 		Point2D.Double objCoord = null;
 		AffineTransform worldToObj = null;

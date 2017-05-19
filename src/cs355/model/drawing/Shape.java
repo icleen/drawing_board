@@ -76,6 +76,7 @@ public abstract class Shape {
 	 */
 	public void setCenter(Point2D.Double center) {
 		this.center = center;
+		resetHandle();
 	}
 
 	/**

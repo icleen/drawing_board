@@ -14,6 +14,7 @@ public class Line extends Shape {
 
 	// The ending point of the line.
 	private Point2D.Double end;
+	private Circle endHandle;
 
 	/**
 	 * Basic constructor that sets all fields.
@@ -28,6 +29,8 @@ public class Line extends Shape {
 		this.type = Shape.SHAPE_TYPE.line;
 		// Set the field.
 		this.end = new Point2D.Double(end.x - start.x, end.y - start.y);
+		handle = new Circle(Color.RED, center, HANDLE_RADIUS);
+		endHandle = new Circle(Color.RED, end, HANDLE_RADIUS);
 	}
 
 	/**
@@ -48,6 +51,7 @@ public class Line extends Shape {
 		worldToObj.translate(this.getCenter().x * -1, this.getCenter().y * -1);
 		this.end = new Point2D.Double(0, 0);
 		worldToObj.transform(end, this.end);
+		resetHandle();
 	}
 
 	/**
@@ -60,6 +64,9 @@ public class Line extends Shape {
 	 */
 	@Override
 	public boolean pointInShape(Point2D.Double pt, double tolerance) {
+		this.isSelected = this.pointInHandle(pt, tolerance);
+		if (isSelected) { return isSelected; }
+		
 		Vector2D p0 = new Vector2D(0, 0);
 		Vector2D p1 = new Vector2D(end.getX(), end.getY());
 		Vector2D q = new Vector2D(pt);
@@ -70,14 +77,17 @@ public class Line extends Shape {
 //		System.out.println("t: " + t);
 		if (t > length || t < 0) {
 			this.isSelected = false;
+			this.rotating = false;
 		}else {
 			Vector2D q1 = (Vector2D) p0.addVector( d.multiply( q.subtractVector(p0).dotProduct(d) ) );
 			double distance = q.subtractVector(q1).length();
 //			System.out.println("distance: " + distance);
 			if (distance <= tolerance) {
 				this.isSelected = true;
+				this.rotating = false;
 			}else {
 				this.isSelected = false;
+				this.rotating = false;
 			}
 		}
 		return this.isSelected;
@@ -85,8 +95,9 @@ public class Line extends Shape {
 
 	@Override
 	public void resetShape(Point2D.Double start, Point2D.Double end) {
-		assert(start.getX() == this.center.getX());
-		assert(start.getY() == this.center.getY());
+//		assert(start.getX() == this.center.getX());
+//		assert(start.getY() == this.center.getY());
+		this.setCenter(start);
 		this.setEnd(end);
 		this.resetHandle();
 	}
@@ -100,5 +111,34 @@ public class Line extends Shape {
 	public double getHeight() {
 		return 0;
 	}
+	
+	@Override
+	public void resetHandle() {
+		handle.setCenter(center);
+		endHandle.setCenter(end);
+	}
+	
+	@Override
+	public boolean pointInHandle(Point2D.Double point, double tolerance) {
+//		check to see if the point is in the startHandle which is at the start point of the line;
+//		thus we do not need to change the coordinates at all for this check; we do need to change 
+//		coordinates to check the end point handle though
+		rotating = handle.pointInShape(point, tolerance);
+		if (rotating) {
+			System.out.println("point in handle: " + handle.shapeSelected());
+			endHandle.setShapeSelected(false);
+			return rotating;
+		}
+		Point2D.Double objCoord = new Point2D.Double(0, 0);
+		AffineTransform worldToObj = new AffineTransform();
+		worldToObj.rotate(this.rotation * -1);
+		worldToObj.translate(endHandle.getCenter().x * -1, endHandle.getCenter().y * -1);
+		worldToObj.transform(point, objCoord);
+		rotating = endHandle.pointInShape(objCoord, tolerance);
+		System.out.println("point in end handle");
+		return rotating;
+	}
+	
+	public Circle getEndHandle() { return endHandle; }
 
 }
