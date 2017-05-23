@@ -39,12 +39,12 @@ public class View implements ViewRefresher {
 	public void refreshView(Graphics2D g2d) {
 		List<Shape> shapes = Model.SINGLETON.getShapes();
 		Shape.SHAPE_TYPE type = null;
-		AffineTransform objToWorld = null;
+		AffineTransform objToView = null;
 		for (Shape s : shapes) {
 			type = s.getShapeType();
 			int width = (int) s.getWidth(), height = (int) s.getHeight();
-			objToWorld = Transformer.inst().objToView(s);
-			g2d.setTransform(objToWorld);
+			objToView = Transformer.inst().objToView(s);
+			g2d.setTransform(objToView);
 			g2d.setColor(s.getColor());
 			switch (type) {
 			case circle:
@@ -77,28 +77,32 @@ public class View implements ViewRefresher {
 			}
 		}
 		if (selected != null) {
-			int width = (int) selected.getWidth(), height = (int) selected.getHeight();
-			objToWorld = Transformer.inst().objToView(selected);
-			g2d.setTransform(objToWorld);
-			
-			if (selected.getShapeType() == Shape.SHAPE_TYPE.triangle) {
-				g2d.setColor(Color.red);
-				g2d.setStroke(new BasicStroke(BORDER_SIZE));
-				g2d.drawPolygon(((Triangle) selected).getXCoordinates(), 
-						((Triangle) selected).getYCoordinates(), Model.TOTAL_TRIANGLE_POINTS);
-			}
-			else if (selected.getShapeType() != Shape.SHAPE_TYPE.line) {
-				g2d.setColor(Color.red);
-				g2d.setStroke(new BasicStroke(BORDER_SIZE));
-				g2d.drawRect(ORIGIN - (width/2), ORIGIN - (height/2), width, height);
+			objToView = Transformer.inst().objToView(selected);
+			g2d.setTransform(objToView);
+			g2d.setColor(Color.red);
+			g2d.setStroke(new BasicStroke(BORDER_SIZE));
+			if (selected.getShapeType() == Shape.SHAPE_TYPE.line) {
+				Circle startHandle = selected.getHandle();
+				Circle endHandle = ((Line) selected).getEndHandle();
+				Point2D.Double end = ((Line) selected).getEnd();
+				g2d.drawOval(ORIGIN - (int) startHandle.getRadius(), ORIGIN - (int) startHandle.getRadius(),
+						(int) startHandle.getWidth(), (int) startHandle.getHeight());
+				g2d.drawOval((int) (end.x - endHandle.getRadius()), (int) (end.y - endHandle.getRadius()),
+						(int) endHandle.getWidth(), (int) endHandle.getHeight());
 			}
 			else {
-				selected = null;
-				return;
+				int width = (int) selected.getWidth(), height = (int) selected.getHeight();
+				if (selected.getShapeType() == Shape.SHAPE_TYPE.triangle) {
+					g2d.drawPolygon(((Triangle) selected).getXCoordinates(), 
+							((Triangle) selected).getYCoordinates(), Model.TOTAL_TRIANGLE_POINTS);
+				}
+				else if (selected.getShapeType() != Shape.SHAPE_TYPE.line) {
+					g2d.drawRect(ORIGIN - (width/2), ORIGIN - (height/2), width, height);
+				}
+				Circle handle = selected.getHandle();
+				g2d.drawOval((int) (handle.getCenter().x - handle.getRadius()), (int) (handle.getCenter().y - handle.getRadius()), 
+						(int) handle.getWidth(), (int) handle.getHeight());
 			}
-			Circle handle = selected.getHandle();
-			g2d.drawOval((int) (handle.getCenter().x - handle.getRadius()), (int) (handle.getCenter().y - handle.getRadius()), 
-					(int) handle.getWidth(), (int) handle.getHeight());
 		}
 		selected = null;
 	}

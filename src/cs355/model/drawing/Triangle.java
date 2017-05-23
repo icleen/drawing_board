@@ -108,6 +108,7 @@ public class Triangle extends Shape {
 		double result3 = q.subtractVector(p2).dotProduct(p0.subtractVector(p2).perpendicular());;
 		if (result1 < 0 && result2 < 0 && result3 < 0) {
 			this.isSelected = true;
+			this.rotating = false;
 		}else if (result1 > 0 && result2 > 0 && result3 > 0) {
 			this.isSelected = true;
 			this.rotating = false;
