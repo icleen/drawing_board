@@ -91,7 +91,8 @@ public class View implements ViewRefresher {
 				g2d.setColor(Color.red);
 				g2d.setStroke(new BasicStroke(BORDER_SIZE));
 				g2d.drawRect(ORIGIN - (width/2), ORIGIN - (height/2), width, height);
-			}else {
+			}
+			else {
 				selected = null;
 				return;
 			}

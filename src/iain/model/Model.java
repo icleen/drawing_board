@@ -148,7 +148,7 @@ public class Model extends CS355Drawing {
 			s = shapes.get(i);
 			s.setIndex(i);
 			objCoord = new Point2D.Double(0, 0);
-			worldToObj = Transformer.inst().viewToObj(s);
+			worldToObj = Transformer.inst().worldToObj(s);
 			worldToObj.transform(point, objCoord);
 //			System.out.println("before: " + point + ", after: " + objCoord);
 			
@@ -167,7 +167,7 @@ public class Model extends CS355Drawing {
 	}
 	
 	public void deselect() {
-		System.out.println("deselect");
+//		System.out.println("deselect");
 		for (int i = shapes.size() - 1; i >= 0; i--) {
 			shapes.get(i).setShapeSelected(false);
 			shapes.get(i).setRotating(false);

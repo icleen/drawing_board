@@ -56,7 +56,7 @@ public class Transformer extends Observable {
 		AffineTransform worldToObj = new AffineTransform(Math.cos(s.getRotation()), Math.sin(-1 * s.getRotation()), 
 				-1 * Math.sin(-1 * s.getRotation()), Math.cos(s.getRotation()), 
 				0, 0);
-		worldToObj.translate(s.getCenter().getX() * -1, s.getCenter().getY() * -1);
+		worldToObj.concatenate(new AffineTransform(1, 0, 0, 1, s.getCenter().getX() * -1, s.getCenter().getY() * -1));
 		return worldToObj;
 	}
 	

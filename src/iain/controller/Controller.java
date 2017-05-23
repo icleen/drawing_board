@@ -59,6 +59,8 @@ public class Controller implements CS355Controller {
 	public void mouseClicked(MouseEvent arg0) {
 		if (currentState == STATES.triangle) {
 			Point2D.Double p = new Point2D.Double(arg0.getX(), arg0.getY());
+			AffineTransform viewToWorld = Transformer.inst().viewToWorld();
+			viewToWorld.transform(p, p);
 			trianglePoints.add(p);
 			if (trianglePoints.size() == Model.TOTAL_TRIANGLE_POINTS) {
 				Triangle triangle = Model.SINGLETON.setTriangle(currentColor, trianglePoints);
@@ -83,6 +85,8 @@ public class Controller implements CS355Controller {
 	public void mousePressed(MouseEvent arg0) {
 		start = new Point2D.Double();
 		start.setLocation(arg0.getX(), arg0.getY());
+		AffineTransform viewToWorld = Transformer.inst().viewToWorld();
+		viewToWorld.transform(start, start);
 		switch (currentState) {
 		case circle:
 			currentShape = new Circle(currentColor, start, INIT_SIZE);
@@ -127,6 +131,8 @@ public class Controller implements CS355Controller {
 	@Override
 	public void mouseDragged(MouseEvent end) {
 		Point2D.Double point = new Point2D.Double(end.getX(), end.getY());
+		AffineTransform viewToWorld = Transformer.inst().viewToWorld();
+		viewToWorld.transform(point, point);
 //		System.out.println("start: (" + start.x + ", " + start.y + ")");
 //		System.out.println("end: (" + end.getX() + ", " + end.getY() + ")");
 		if (currentState != STATES.select && currentState != STATES.zoomIn 
@@ -143,7 +149,7 @@ public class Controller implements CS355Controller {
 				start = point;
 			}else {
 				Point2D.Double s = new Point2D.Double(0, 0), e = new Point2D.Double(0, 0);
-				AffineTransform worldToObj = Transformer.inst().viewToObj(currentShape);
+				AffineTransform worldToObj = Transformer.inst().worldToObj(currentShape);
 				worldToObj.transform(start, s);
 				worldToObj.transform(point, e);
 //				System.out.println("start: (" + s.x + ", " + s.y + ")");
@@ -256,7 +262,7 @@ public class Controller implements CS355Controller {
 	@Override
 	public void hScrollbarChanged(int value) {
 		// TODO Auto-generated method stub
-
+//		GUIFunctions.set
 	}
 
 	@Override
