@@ -30,6 +30,7 @@ import cs355.model.drawing.Square;
 import cs355.model.drawing.Triangle;
 import iain.model.Model;
 import iain.model.SaveStructure;
+import iain.utilities.Transformer;
 
 public class Controller implements CS355Controller {
 	
@@ -150,8 +151,7 @@ public class Controller implements CS355Controller {
 				start = point;
 			}else if (currentShape.getShapeType() != Shape.SHAPE_TYPE.line) {
 				Point2D.Double s = new Point2D.Double(0, 0), e = new Point2D.Double(0, 0);
-				AffineTransform worldToObj = new AffineTransform();
-				worldToObj.translate(currentShape.getCenter().getX() * -1, currentShape.getCenter().getY() * -1);
+				AffineTransform worldToObj = Transformer.inst().viewToObj(currentShape);
 				worldToObj.transform(start, s);
 				worldToObj.transform(point, e);
 //				System.out.println("start: (" + s.x + ", " + s.y + ")");
@@ -267,20 +267,14 @@ public class Controller implements CS355Controller {
 
 	@Override
 	public void zoomInButtonHit() {
-		currentState = STATES.zoomIn;
-		start = null;
-		currentShape = null;
-		currentIndex = -1;
-		Model.SINGLETON.deselect();
+		Transformer.inst().zoomIn();
+		GUIFunctions.setZoomText(Transformer.inst().getZoom());
 	}
 
 	@Override
 	public void zoomOutButtonHit() {
-		currentState = STATES.zoomOut;
-		start = null;
-		currentShape = null;
-		currentIndex = -1;
-		Model.SINGLETON.deselect();
+		Transformer.inst().zoomOut();
+		GUIFunctions.setZoomText(Transformer.inst().getZoom());
 	}
 
 	@Override

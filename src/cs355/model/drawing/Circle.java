@@ -3,7 +3,7 @@ package cs355.model.drawing;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
-import iain.linear.Vector2D;
+import iain.utilities.Vector2D;
 
 /**
  * Add your circle code here. You can add fields, but you cannot

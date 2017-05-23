@@ -15,6 +15,7 @@ import cs355.model.drawing.Shape;
 import cs355.model.drawing.Triangle;
 import cs355.view.ViewRefresher;
 import iain.model.Model;
+import iain.utilities.Transformer;
 
 public class View implements ViewRefresher {
 	
@@ -26,6 +27,7 @@ public class View implements ViewRefresher {
 	
 	public View() {
 		Model.SINGLETON.addObserver(this);
+		Transformer.inst().addObserver(this);
 	}
 
 	@Override
@@ -41,9 +43,7 @@ public class View implements ViewRefresher {
 		for (Shape s : shapes) {
 			type = s.getShapeType();
 			int width = (int) s.getWidth(), height = (int) s.getHeight();
-			objToWorld = new AffineTransform();
-			objToWorld.translate(s.getCenter().x, s.getCenter().y);
-			objToWorld.rotate(s.getRotation());
+			objToWorld = Transformer.inst().objToView(s);
 			g2d.setTransform(objToWorld);
 			g2d.setColor(s.getColor());
 			switch (type) {
@@ -77,50 +77,28 @@ public class View implements ViewRefresher {
 			}
 		}
 		if (selected != null) {
-			if (selected.getShapeType() == Shape.SHAPE_TYPE.line) {
-				
-				Circle startHandle = selected.getHandle();
-				Circle endHandle = selected.getHandle();
-				Point2D.Double end = ((Line) selected).getEnd();
-				objToWorld = new AffineTransform();
-				objToWorld.translate(selected.getCenter().x, selected.getCenter().y);
-				objToWorld.rotate(selected.getRotation());
-				g2d.setTransform(objToWorld);
+			int width = (int) selected.getWidth(), height = (int) selected.getHeight();
+			objToWorld = Transformer.inst().objToView(selected);
+			g2d.setTransform(objToWorld);
+			
+			if (selected.getShapeType() == Shape.SHAPE_TYPE.triangle) {
 				g2d.setColor(Color.red);
-//				(int) handle.getCenter().x, (int) handle.getCenter().y
-				g2d.drawOval(ORIGIN - (int) startHandle.getRadius(), ORIGIN - (int) startHandle.getRadius(), 
-						(int) startHandle.getWidth(), (int) startHandle.getHeight());
-				g2d.drawOval((int) (end.x - endHandle.getRadius()), (int) (end.y - endHandle.getRadius()), 
-						(int) endHandle.getWidth(), (int) endHandle.getHeight());
-				
-			}else {
-				int width = (int) selected.getWidth(), height = (int) selected.getHeight();
-				objToWorld = new AffineTransform();
-				objToWorld.translate(selected.getCenter().x, selected.getCenter().y);
-				objToWorld.rotate(selected.getRotation());
-				g2d.setTransform(objToWorld);
-				g2d.setColor(Color.red);
-				
-				if (selected.getShapeType() == Shape.SHAPE_TYPE.triangle) {
-					g2d.setStroke(new BasicStroke(BORDER_SIZE));
-					g2d.drawPolygon(((Triangle) selected).getXCoordinates(), 
-							((Triangle) selected).getYCoordinates(), Model.TOTAL_TRIANGLE_POINTS);
-				}
-				else if (selected.getShapeType() != Shape.SHAPE_TYPE.line) {
-					g2d.setStroke(new BasicStroke(BORDER_SIZE));
-					g2d.drawRect(ORIGIN - (width/2), ORIGIN - (height/2), width, height);
-				}else {
-					System.err.println("The shape is unknown! " + selected.getShapeType());
-				}
-				Circle handle = selected.getHandle();
-				objToWorld = new AffineTransform();
-				objToWorld.translate(selected.getCenter().x, selected.getCenter().y);
-				objToWorld.rotate(selected.getRotation());
-				g2d.setTransform(objToWorld);
-//				(int) handle.getCenter().x, (int) handle.getCenter().y
-				g2d.drawOval((int) (handle.getCenter().x - handle.getRadius()), (int) (handle.getCenter().y - handle.getRadius()), 
-						(int) handle.getWidth(), (int) handle.getHeight());
+				g2d.setStroke(new BasicStroke(BORDER_SIZE));
+				g2d.drawPolygon(((Triangle) selected).getXCoordinates(), 
+						((Triangle) selected).getYCoordinates(), Model.TOTAL_TRIANGLE_POINTS);
 			}
+			else if (selected.getShapeType() != Shape.SHAPE_TYPE.line) {
+				g2d.setColor(Color.red);
+				g2d.setStroke(new BasicStroke(BORDER_SIZE));
+				g2d.drawRect(ORIGIN - (width/2), ORIGIN - (height/2), width, height);
+			}
+			else {
+				selected = null;
+				return;
+			}
+			Circle handle = selected.getHandle();
+			g2d.drawOval((int) (handle.getCenter().x - handle.getRadius()), (int) (handle.getCenter().y - handle.getRadius()), 
+					(int) handle.getWidth(), (int) handle.getHeight());
 		}
 		selected = null;
 	}

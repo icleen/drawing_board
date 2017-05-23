@@ -9,6 +9,7 @@ import java.util.List;
 import cs355.model.drawing.CS355Drawing;
 import cs355.model.drawing.Shape;
 import cs355.model.drawing.Triangle;
+import iain.utilities.Transformer;
 
 public class Model extends CS355Drawing {
 	
@@ -63,7 +64,7 @@ public class Model extends CS355Drawing {
 		shapes.remove(index);
 		shapes.add(s);
 		s.setIndex(shapes.size() - 1);
-		System.out.println("moveToFront " + index + ", " + (shapes.size() - 1));
+//		System.out.println("moveToFront " + index + ", " + (shapes.size() - 1));
 		this.setChanged();
 		this.notifyObservers();
 	}
@@ -79,7 +80,7 @@ public class Model extends CS355Drawing {
 		shapes.remove(index);
 		shapes.add(BACK_INDEX, s);
 		s.setIndex(BACK_INDEX);
-		System.out.println("moveToBack " + index + ", " + (BACK_INDEX));
+//		System.out.println("moveToBack " + index + ", " + (BACK_INDEX));
 		this.setChanged();
 		this.notifyObservers();
 	}
@@ -95,7 +96,7 @@ public class Model extends CS355Drawing {
 		shapes.remove(index);
 		shapes.add(index + 1, s);
 		s.setIndex(index + 1);
-		System.out.println("moveForward " + index + ", " + (index + 1));
+//		System.out.println("moveForward " + index + ", " + (index + 1));
 		this.setChanged();
 		this.notifyObservers();
 	}
@@ -111,7 +112,7 @@ public class Model extends CS355Drawing {
 		shapes.remove(index);
 		shapes.add(index - 1, s);
 		s.setIndex(index - 1);
-		System.out.println("moveBackward " + index + ", " + (index - 1));
+//		System.out.println("moveBackward " + index + ", " + (index - 1));
 		this.setChanged();
 		this.notifyObservers();
 	}
@@ -156,15 +157,14 @@ public class Model extends CS355Drawing {
 			s = shapes.get(i);
 			s.setIndex(i);
 			objCoord = new Point2D.Double(0, 0);
-			worldToObj = new AffineTransform();
-			worldToObj.rotate(s.getRotation() * -1);
-			worldToObj.translate(s.getCenter().x * -1, s.getCenter().y * -1);
+			worldToObj = Transformer.inst().viewToObj(s);
 			worldToObj.transform(point, objCoord);
+//			System.out.println("before: " + point + ", after: " + objCoord);
 			
 			if (s.pointInShape(objCoord, SELECT_TOLERANCE) && !isFound) {
 				selected = s;
 				isFound = true;
-				System.out.println("selected: " + selected.getShapeType());
+//				System.out.println("selected: " + selected.getShapeType());
 			}else {
 				s.setShapeSelected(false);
 				s.setRotating(false);
