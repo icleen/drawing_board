@@ -15,6 +15,7 @@ import cs355.model.drawing.Shape;
 import cs355.model.drawing.Triangle;
 import cs355.view.ViewRefresher;
 import iain.model.Model;
+import iain.utilities.Transformer;
 
 public class View implements ViewRefresher {
 	
@@ -26,6 +27,7 @@ public class View implements ViewRefresher {
 	
 	public View() {
 		Model.SINGLETON.addObserver(this);
+		Transformer.inst().addObserver(this);
 	}
 
 	@Override
@@ -41,9 +43,7 @@ public class View implements ViewRefresher {
 		for (Shape s : shapes) {
 			type = s.getShapeType();
 			int width = (int) s.getWidth(), height = (int) s.getHeight();
-			objToWorld = new AffineTransform();
-			objToWorld.translate(s.getCenter().x, s.getCenter().y);
-			objToWorld.rotate(s.getRotation());
+			objToWorld = Transformer.inst().objToView(s);
 			g2d.setTransform(objToWorld);
 			g2d.setColor(s.getColor());
 			switch (type) {
@@ -78,9 +78,7 @@ public class View implements ViewRefresher {
 		}
 		if (selected != null) {
 			int width = (int) selected.getWidth(), height = (int) selected.getHeight();
-			objToWorld = new AffineTransform();
-			objToWorld.translate(selected.getCenter().x, selected.getCenter().y);
-			objToWorld.rotate(selected.getRotation());
+			objToWorld = Transformer.inst().objToView(selected);
 			g2d.setTransform(objToWorld);
 			
 			if (selected.getShapeType() == Shape.SHAPE_TYPE.triangle) {
@@ -98,11 +96,6 @@ public class View implements ViewRefresher {
 				return;
 			}
 			Circle handle = selected.getHandle();
-			objToWorld = new AffineTransform();
-			objToWorld.translate(selected.getCenter().x, selected.getCenter().y);
-			objToWorld.rotate(selected.getRotation());
-			g2d.setTransform(objToWorld);
-//			(int) handle.getCenter().x, (int) handle.getCenter().y
 			g2d.drawOval((int) (handle.getCenter().x - handle.getRadius()), (int) (handle.getCenter().y - handle.getRadius()), 
 					(int) handle.getWidth(), (int) handle.getHeight());
 		}
