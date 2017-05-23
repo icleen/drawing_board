@@ -149,11 +149,8 @@ public class Model extends CS355Drawing {
 			s.setIndex(i);
 			objCoord = new Point2D.Double(0, 0);
 			worldToObj = Transformer.inst().viewToObj(s);
-//			worldToObj = new AffineTransform();
-//			worldToObj.rotate(s.getRotation() * -1);
-//			worldToObj.translate(s.getCenter().x * -1, s.getCenter().y * -1);
 			worldToObj.transform(point, objCoord);
-			System.out.println("before: " + point + ", after: " + objCoord);
+//			System.out.println("before: " + point + ", after: " + objCoord);
 			
 			if (s.pointInShape(objCoord, SELECT_TOLERANCE) && !isFound) {
 				selected = s;

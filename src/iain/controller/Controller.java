@@ -148,13 +148,13 @@ public class Controller implements CS355Controller {
 				worldToObj.transform(point, e);
 //				System.out.println("start: (" + s.x + ", " + s.y + ")");
 //				System.out.println("point: (" + e.x + ", " + e.y + ")");
-				System.out.println("center: (" + currentShape.getCenter().x + ", " + currentShape.getCenter().y + ")");
+//				System.out.println("center: (" + currentShape.getCenter().x + ", " + currentShape.getCenter().y + ")");
 				double pheta = Math.atan2(e.getY(), e.getX());
 				double phi = Math.atan2(s.getY(), s.getX());
 				double angle = pheta - phi;
 //				System.out.println("pheta: " + pheta + ", phi: " + phi + ", angle: " + angle);
 				currentShape.setRotation(currentShape.getRotation() + angle);
-				System.out.println("rotation: " + currentShape.getRotation());
+//				System.out.println("rotation: " + currentShape.getRotation());
 				start = point;
 			}
 		}
