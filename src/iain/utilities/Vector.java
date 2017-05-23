@@ -1,4 +1,4 @@
-package iain.linear;
+package iain.utilities;
 
 public class Vector {
 	

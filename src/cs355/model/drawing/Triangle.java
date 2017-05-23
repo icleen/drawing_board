@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 
-import iain.linear.Vector2D;
 import iain.model.Model;
+import iain.utilities.Vector2D;
 
 /**
  * Add your triangle code here. You can add fields, but you cannot

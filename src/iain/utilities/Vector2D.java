@@ -1,4 +1,4 @@
-package iain.linear;
+package iain.utilities;
 
 import java.awt.geom.Point2D;
 

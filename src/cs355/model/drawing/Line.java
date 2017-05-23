@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
-import iain.linear.Vector2D;
+import iain.utilities.Vector2D;
 
 /**
  * Add your line code here. You can add fields, but you cannot
