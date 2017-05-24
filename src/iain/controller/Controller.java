@@ -258,8 +258,6 @@ public class Controller implements CS355Controller {
 	public void zoomInButtonHit() {
 		Transformer.inst().zoomIn();
 		GUIFunctions.setZoomText(Transformer.inst().getZoom());
-		GUIFunctions.setHScrollBarKnob((int) (1/Transformer.inst().getZoom() * Transformer.DEFAULT_SCREEN_SIZE));
-		GUIFunctions.setVScrollBarKnob((int) (1/Transformer.inst().getZoom() * Transformer.DEFAULT_SCREEN_SIZE));
 	}
 
 	@Override

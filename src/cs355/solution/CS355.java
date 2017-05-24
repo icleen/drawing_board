@@ -26,7 +26,7 @@ public class CS355 {
 		GUIFunctions.setZoomText(Transformer.inst().getZoom());
 		GUIFunctions.setHScrollBarKnob((int) (1/Transformer.inst().getZoom() * Transformer.DEFAULT_SCREEN_SIZE));
 		GUIFunctions.setVScrollBarKnob((int) (1/Transformer.inst().getZoom() * Transformer.DEFAULT_SCREEN_SIZE));
-		System.out.println(Transformer.inst().getCenter().x + ", " + Transformer.inst().getCenter().y);
+//		System.out.println(Transformer.inst().getCenter().x + ", " + Transformer.inst().getCenter().y);
 		GUIFunctions.setHScrollBarPosit((int) (Transformer.LARGEST_SCREEN_SIZE/2 - Transformer.inst().getScreenSize()/2));
 		GUIFunctions.setVScrollBarPosit((int) (Transformer.LARGEST_SCREEN_SIZE/2 - Transformer.inst().getScreenSize()/2));
 		GUIFunctions.refresh();
