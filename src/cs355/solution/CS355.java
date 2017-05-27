@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import cs355.GUIFunctions;
 import iain.controller.Controller;
+import iain.utilities.Transformer;
 import iain.view.View;
 
 /**
@@ -12,6 +13,8 @@ import iain.view.View;
  * view, and controller and give them to the app.
  */
 public class CS355 {
+	
+	private static final int SCREEN_SIZE = 512;
 
 	/**
 	 * This is where it starts.
@@ -22,6 +25,8 @@ public class CS355 {
 		// Fill in the parameters below with your controller and view.
 		GUIFunctions.createCS355Frame(new Controller(), new View());
 		GUIFunctions.changeSelectedColor(Color.white);
+		GUIFunctions.setHScrollBarKnob(SCREEN_SIZE * (int) (1/Transformer.inst().getZoom()));
+		GUIFunctions.setVScrollBarKnob(SCREEN_SIZE * (int) (1/Transformer.inst().getZoom()));
 		GUIFunctions.refresh();
 	}
 }

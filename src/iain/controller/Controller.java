@@ -52,7 +52,6 @@ public class Controller implements CS355Controller {
 	public Controller() {
 		currentState = STATES.select;
 		currentColor = Color.WHITE;
-//		GUIFunctions.changeSelectedColor(currentColor);
 	}
 	
 	@Override
@@ -286,13 +285,11 @@ public class Controller implements CS355Controller {
 	@Override
 	public void hScrollbarChanged(int value) {
 		// TODO Auto-generated method stub
-//		GUIFunctions.set
 	}
 
 	@Override
 	public void vScrollbarChanged(int value) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
