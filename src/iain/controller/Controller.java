@@ -31,6 +31,7 @@ import cs355.model.drawing.Triangle;
 import iain.model.Model;
 import iain.model.SaveStructure;
 import iain.utilities.Transformer;
+import iain.view.Draw3D;
 
 public class Controller implements CS355Controller {
 	
@@ -39,8 +40,11 @@ public class Controller implements CS355Controller {
 	private static final int INIT_SIZE = 0;
 	
 	private static enum STATES {
-			circle, ellipse, line, rectangle, square, triangle, select, zoomIn, zoomOut
+			circle, ellipse, line, rectangle, square, triangle, select
 	};
+	
+	private boolean drawMode3D;
+	
 	private STATES currentState;
 	private Color currentColor;
 	private int currentIndex;
@@ -52,6 +56,7 @@ public class Controller implements CS355Controller {
 	public Controller() {
 		currentState = STATES.select;
 		currentColor = Color.WHITE;
+		drawMode3D = false;
 //		GUIFunctions.changeSelectedColor(currentColor);
 	}
 	
@@ -288,14 +293,19 @@ public class Controller implements CS355Controller {
 
 	@Override
 	public void toggle3DModelDisplay() {
-		// TODO Auto-generated method stub
-
+		if (drawMode3D) {
+			drawMode3D = false;
+		}else {
+			drawMode3D = true;
+		}
+		Draw3D.SINGLETON.setDrawMode(drawMode3D);
 	}
 
 	@Override
 	public void keyPressed(Iterator<Integer> iterator) {
-		// TODO Auto-generated method stub
-
+		if (drawMode3D) {
+			
+		}
 	}
 
 	@Override
