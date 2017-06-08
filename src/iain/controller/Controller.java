@@ -71,7 +71,7 @@ public class Controller implements CS355Controller {
 				Triangle triangle = Model.SINGLETON.setTriangle(currentColor, trianglePoints);
 				Model.SINGLETON.addShape(triangle);
 				trianglePoints.clear();
-				System.out.println("adding triangle");
+//				System.out.println("adding triangle");
 			}
 		}else if (currentState == STATES.select) {
 			
@@ -275,13 +275,13 @@ public class Controller implements CS355Controller {
 
 	@Override
 	public void hScrollbarChanged(int value) {
-		System.out.println("h");
+//		System.out.println("h");
 		Transformer.inst().setHorizontal(value);
 	}
 
 	@Override
 	public void vScrollbarChanged(int value) {
-		System.out.println("v");
+//		System.out.println("v");
 		Transformer.inst().setVertical(value);
 	}
 

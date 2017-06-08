@@ -83,21 +83,21 @@ public class Transformer extends Observable {
 		changeable = false;
 		GUIFunctions.setHScrollBarKnob((int) (1/Transformer.inst().getZoom() * Transformer.DEFAULT_SCREEN_SIZE));
 		GUIFunctions.setVScrollBarKnob((int) (1/Transformer.inst().getZoom() * Transformer.DEFAULT_SCREEN_SIZE));
-		System.out.println("center: (" + screen_center.x + ", " + screen_center.y + ")");
+//		System.out.println("center: (" + screen_center.x + ", " + screen_center.y + ")");
 		GUIFunctions.setHScrollBarPosit(((int) screen_center.x - getScreenSize()/2));
 		GUIFunctions.setVScrollBarPosit(((int) screen_center.y - getScreenSize()/2));
 		changeable = true;
-		System.out.println("center: (" + screen_center.x + ", " + screen_center.y + ")");
-		System.out.println("new center (y): " + ((int) screen_center.y - getScreenSize()/2));
+//		System.out.println("center: (" + screen_center.x + ", " + screen_center.y + ")");
+//		System.out.println("new center (y): " + ((int) screen_center.y - getScreenSize()/2));
 		this.setChanged();
 		this.notifyObservers();
 	}
 	
 	public void zoomOut() {
 		if (zoom > 0.25) zoom *= 0.5;
-		System.out.println("center: (" + screen_center.x + ", " + screen_center.y + ")");
-		System.out.println("screenSize: " + getScreenSize());
-		System.out.println("new center (y): " + ((int) screen_center.y - getScreenSize()/2));
+//		System.out.println("center: (" + screen_center.x + ", " + screen_center.y + ")");
+//		System.out.println("screenSize: " + getScreenSize());
+//		System.out.println("new center (y): " + ((int) screen_center.y - getScreenSize()/2));
 		int test = LARGEST_SCREEN_SIZE - getScreenSize();
 		if (screen_center.x - getScreenSize()/2 < test) {
 			GUIFunctions.setHScrollBarPosit((int) screen_center.x - getScreenSize()/2);
@@ -124,9 +124,9 @@ public class Transformer extends Observable {
 	public void setHorizontal(int position) {
 		System.out.println("horizontal: " + position);
 		if (changeable) {
-			System.out.println("point: " + (position + getScreenSize()/2));
+//			System.out.println("point: " + (position + getScreenSize()/2));
 			screen_center.x = position + getScreenSize()/2;
-			System.out.println("center: (" + screen_center.x + ", " + screen_center.y + ")");
+//			System.out.println("center: (" + screen_center.x + ", " + screen_center.y + ")");
 			this.setChanged();
 			this.notifyObservers();
 		}
@@ -134,9 +134,9 @@ public class Transformer extends Observable {
 	
 	public void setVertical(int position) {
 		if (changeable) {
-			System.out.println("point: " + (position + getScreenSize()/2));
+//			System.out.println("point: " + (position + getScreenSize()/2));
 			screen_center.y = position + getScreenSize()/2;
-			System.out.println("center: (" + screen_center.x + ", " + screen_center.y + ")");
+//			System.out.println("center: (" + screen_center.x + ", " + screen_center.y + ")");
 			this.setChanged();
 			this.notifyObservers();
 		}
