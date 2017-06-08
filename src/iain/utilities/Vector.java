@@ -57,6 +57,14 @@ public class Vector {
 		return result;
 	}
 	
+	public Vector vectorMultiply(Vector v) {
+		Vector result = new Vector(this.dimension);
+		for (int i = 0; i < v.length(); i++) {
+			result.values[i] = this.values[i] * v.values[i];
+		}
+		return result;
+	}
+	
 	public double dotProduct(Vector v) {
 		int total = 0;
 		for (int i = 0; i < dimension; i++) {
@@ -78,6 +86,10 @@ public class Vector {
 		for (int i = 0; i < dimension; i++) {
 			values[i] = values[i] / length;
 		}
+	}
+	
+	public int getDimension() {
+		return dimension;
 	}
 
 }

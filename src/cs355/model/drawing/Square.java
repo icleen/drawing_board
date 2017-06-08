@@ -54,8 +54,6 @@ public class Square extends Shape {
 	 */
 	@Override
 	public boolean pointInShape(Point2D.Double point, double tolerance) {
-		System.out.println("handle: " + handle.toString());
-		System.out.println("center: " + toString());
 		double x = point.x;
 		double y = point.y;
 		if (x < 0) x *= -1;

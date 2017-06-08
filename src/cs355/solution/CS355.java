@@ -25,8 +25,12 @@ public class CS355 {
 		// Fill in the parameters below with your controller and view.
 		GUIFunctions.createCS355Frame(new Controller(), new View());
 		GUIFunctions.changeSelectedColor(Color.white);
-		GUIFunctions.setHScrollBarKnob(SCREEN_SIZE * (int) (1/Transformer.inst().getZoom()));
-		GUIFunctions.setVScrollBarKnob(SCREEN_SIZE * (int) (1/Transformer.inst().getZoom()));
+		GUIFunctions.setZoomText(Transformer.inst().getZoom());
+		GUIFunctions.setHScrollBarKnob((int) (1/Transformer.inst().getZoom() * Transformer.DEFAULT_SCREEN_SIZE));
+		GUIFunctions.setVScrollBarKnob((int) (1/Transformer.inst().getZoom() * Transformer.DEFAULT_SCREEN_SIZE));
+//		System.out.println(Transformer.inst().getCenter().x + ", " + Transformer.inst().getCenter().y);
+		GUIFunctions.setHScrollBarPosit((int) (Transformer.LARGEST_SCREEN_SIZE/2 - Transformer.inst().getScreenSize()/2));
+		GUIFunctions.setVScrollBarPosit((int) (Transformer.LARGEST_SCREEN_SIZE/2 - Transformer.inst().getScreenSize()/2));
 		GUIFunctions.refresh();
 	}
 }

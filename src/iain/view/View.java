@@ -16,6 +16,7 @@ import cs355.model.drawing.Triangle;
 import cs355.view.ViewRefresher;
 import iain.model.Model;
 import iain.utilities.Transformer;
+import iain.utilities.Transformer3D;
 
 public class View implements ViewRefresher {
 	
@@ -28,6 +29,8 @@ public class View implements ViewRefresher {
 	public View() {
 		Model.SINGLETON.addObserver(this);
 		Transformer.inst().addObserver(this);
+		Transformer3D.SINGLETON.addObserver(this);
+		Draw3D.SINGLETON.addObserver(this);
 	}
 
 	@Override

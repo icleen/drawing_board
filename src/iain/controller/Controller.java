@@ -31,6 +31,7 @@ import cs355.model.drawing.Triangle;
 import iain.model.Model;
 import iain.model.SaveStructure;
 import iain.utilities.Transformer;
+import iain.view.Draw3D;
 
 public class Controller implements CS355Controller {
 	
@@ -39,8 +40,11 @@ public class Controller implements CS355Controller {
 	private static final int INIT_SIZE = 0;
 	
 	private static enum STATES {
-			circle, ellipse, line, rectangle, square, triangle, select, zoomIn, zoomOut
+			circle, ellipse, line, rectangle, square, triangle, select
 	};
+	
+	private boolean drawMode3D;
+	
 	private STATES currentState;
 	private Color currentColor;
 	private int currentIndex;
@@ -52,6 +56,8 @@ public class Controller implements CS355Controller {
 	public Controller() {
 		currentState = STATES.select;
 		currentColor = Color.WHITE;
+		drawMode3D = false;
+//		GUIFunctions.changeSelectedColor(currentColor);
 	}
 	
 	@Override
@@ -65,7 +71,7 @@ public class Controller implements CS355Controller {
 				Triangle triangle = Model.SINGLETON.setTriangle(currentColor, trianglePoints);
 				Model.SINGLETON.addShape(triangle);
 				trianglePoints.clear();
-				System.out.println("adding triangle");
+//				System.out.println("adding triangle");
 			}
 		}else if (currentState == STATES.select) {
 			
@@ -103,18 +109,14 @@ public class Controller implements CS355Controller {
 			currentShape = new Square(currentColor, start, INIT_SIZE);
 			break;
 		case select:
-			if (currentShape != null && Model.SINGLETON.pointInShape(start, currentShape)) {
-				System.out.println("selected currentShape");
-				break;
-			}else {
-				System.out.println("didn't selected currentShape: " + (currentShape == null));
+			if (currentShape == null || !Model.SINGLETON.pointInShape(start, currentShape)) {
 				currentShape = Model.SINGLETON.selectShape(start);
 				if (currentShape != null) {
 					currentIndex = currentShape.getIndex();
 					currentColor = currentShape.getColor();
-					GUIFunctions.changeSelectedColor(currentColor);
-					
-				}else {
+					GUIFunctions.changeSelectedColor(currentColor);	
+				}
+				else {
 					currentIndex = -1;
 				}
 			}
@@ -141,8 +143,6 @@ public class Controller implements CS355Controller {
 		Point2D.Double point = new Point2D.Double(end.getX(), end.getY());
 		AffineTransform viewToWorld = Transformer.inst().viewToWorld();
 		viewToWorld.transform(point, point);
-//		System.out.println("start: (" + start.x + ", " + start.y + ")");
-//		System.out.println("end: (" + end.getX() + ", " + end.getY() + ")");
 		if (currentState != STATES.select && currentState != STATES.triangle) {
 			currentShape.resetShape(start, point);
 		}
@@ -159,30 +159,19 @@ public class Controller implements CS355Controller {
 				AffineTransform worldToObj = Transformer.inst().worldToObj(currentShape);
 				worldToObj.transform(start, s);
 				worldToObj.transform(point, e);
-//				System.out.println("start: (" + s.x + ", " + s.y + ")");
-//				System.out.println("point: (" + e.x + ", " + e.y + ")");
-//				System.out.println("center: (" + currentShape.getCenter().x + ", " + currentShape.getCenter().y + ")");
 				double pheta = Math.atan2(e.getY(), e.getX());
 				double phi = Math.atan2(s.getY(), s.getX());
 				double angle = pheta - phi;
-//				System.out.println("pheta: " + pheta + ", phi: " + phi + ", angle: " + angle);
 				currentShape.setRotation(currentShape.getRotation() + angle);
-//				System.out.println("rotation: " + currentShape.getRotation());
 				start = point;
 			}else {
 				Circle handle = currentShape.getHandle();
 				if (handle.shapeSelected()) {
-//					System.out.println("handle selected");
 					Point2D.Double endPt = ((Line) currentShape).getEnd();
-					AffineTransform objToWorld = new AffineTransform();
-					objToWorld.translate(currentShape.getCenter().x, currentShape.getCenter().y);
-					objToWorld.rotate(currentShape.getRotation());
-//					System.out.println(endPt);
+					AffineTransform objToWorld = Transformer.inst().objToWorld(currentShape);
 					objToWorld.transform(endPt, endPt);
-//					System.out.println(endPt);
 					currentShape.resetShape(point, endPt);
 				}else {
-//					System.out.println("end handle selected");
 					((Line) currentShape).setEnd(point);
 				}
 			}
@@ -280,16 +269,18 @@ public class Controller implements CS355Controller {
 	public void zoomOutButtonHit() {
 		Transformer.inst().zoomOut();
 		GUIFunctions.setZoomText(Transformer.inst().getZoom());
+		GUIFunctions.setHScrollBarKnob((int) (1/Transformer.inst().getZoom() * Transformer.DEFAULT_SCREEN_SIZE));
+		GUIFunctions.setVScrollBarKnob((int) (1/Transformer.inst().getZoom() * Transformer.DEFAULT_SCREEN_SIZE));
 	}
 
 	@Override
 	public void hScrollbarChanged(int value) {
-		// TODO Auto-generated method stub
+		Transformer.inst().setHorizontal(value);
 	}
 
 	@Override
 	public void vScrollbarChanged(int value) {
-		// TODO Auto-generated method stub
+		Transformer.inst().setVertical(value);
 	}
 
 	@Override
@@ -300,14 +291,19 @@ public class Controller implements CS355Controller {
 
 	@Override
 	public void toggle3DModelDisplay() {
-		// TODO Auto-generated method stub
-
+		if (drawMode3D) {
+			drawMode3D = false;
+		}else {
+			drawMode3D = true;
+		}
+		Draw3D.SINGLETON.setDrawMode(drawMode3D);
 	}
 
 	@Override
 	public void keyPressed(Iterator<Integer> iterator) {
-		// TODO Auto-generated method stub
-
+		if (drawMode3D) {
+			
+		}
 	}
 
 	@Override
