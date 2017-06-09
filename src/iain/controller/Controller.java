@@ -28,6 +28,7 @@ import cs355.model.drawing.Rectangle;
 import cs355.model.drawing.Shape;
 import cs355.model.drawing.Square;
 import cs355.model.drawing.Triangle;
+import cs355.model.scene.CS355Scene;
 import iain.model.Model;
 import iain.model.SaveStructure;
 import iain.utilities.Transformer;
@@ -43,6 +44,8 @@ public class Controller implements CS355Controller {
 			circle, ellipse, line, rectangle, square, triangle, select
 	};
 	
+	
+	public static CS355Scene scene = new CS355Scene();
 	private boolean drawMode3D;
 	
 	private STATES currentState;
@@ -285,8 +288,8 @@ public class Controller implements CS355Controller {
 
 	@Override
 	public void openScene(File file) {
-		// TODO Auto-generated method stub
-
+		scene.open(file);
+		Draw3D.SINGLETON.setDrawMode(drawMode3D);
 	}
 
 	@Override

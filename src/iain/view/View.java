@@ -14,6 +14,7 @@ import cs355.model.drawing.Line;
 import cs355.model.drawing.Shape;
 import cs355.model.drawing.Triangle;
 import cs355.view.ViewRefresher;
+import iain.controller.Controller;
 import iain.model.Model;
 import iain.utilities.Transformer;
 import iain.utilities.Transformer3D;
@@ -31,6 +32,7 @@ public class View implements ViewRefresher {
 		Transformer.inst().addObserver(this);
 		Transformer3D.SINGLETON.addObserver(this);
 		Draw3D.SINGLETON.addObserver(this);
+		Controller.scene.addObserver(this);
 	}
 
 	@Override
@@ -108,6 +110,8 @@ public class View implements ViewRefresher {
 			}
 		}
 		selected = null;
+		g2d.setTransform(new AffineTransform());
+		Draw3D.SINGLETON.draw(g2d);
 	}
 
 }

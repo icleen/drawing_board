@@ -122,7 +122,7 @@ public class Transformer extends Observable {
 	}
 	
 	public void setHorizontal(int position) {
-		System.out.println("horizontal: " + position);
+//		System.out.println("horizontal: " + position);
 		if (changeable) {
 //			System.out.println("point: " + (position + getScreenSize()/2));
 			screen_center.x = position + getScreenSize()/2;

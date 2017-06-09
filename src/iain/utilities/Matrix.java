@@ -34,7 +34,7 @@ public class Matrix {
 	}
 	
 	public Vector transform(Vector v) {
-		assert(values[0].length == v.getDimension());
+		assert(columns == v.getDimension());
 		Vector result = new Vector(values.length);
 		double value;
 		for (int i = 0; i < rows; i++) {
