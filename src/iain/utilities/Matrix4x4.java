@@ -8,10 +8,10 @@ public class Matrix4x4 extends Matrix {
 		super(SIZE, SIZE);
 	}
 	
-	public void translate(int x, int y, int z) {
-		values[3][0] = x;
-		values[3][1] = y;
-		values[3][2] = z;
+	public void translate(double x, double y, double z) {
+		values[0][3] = x;
+		values[1][3] = y;
+		values[2][3] = z;
 	}
 	
 	/**
@@ -20,10 +20,10 @@ public class Matrix4x4 extends Matrix {
 	 */
 	public void rotateY(double rotation) {
 		double rad = (rotation * (Math.PI/180));
-		values[0][0] = (int) Math.cos(rad);
-		values[0][2] = (int) Math.sin(rad);
-		values[2][0] = -1 * (int) Math.sin(rad);
-		values[2][2] = (int) Math.cos(rad);
+		values[0][0] = Math.cos(rad);
+		values[0][2] = Math.sin(rad);
+		values[2][0] = -1 * values[0][2];
+		values[2][2] = values[0][0];
 	}
 	
 	/**
@@ -32,10 +32,10 @@ public class Matrix4x4 extends Matrix {
 	 */
 	public void rotateX(double rotation) {
 		double rad = (rotation * (Math.PI/180));
-		values[1][1] = (int) Math.cos(rad);
-		values[1][2] = (int) Math.sin(rad);
-		values[2][1] = -1 * (int) Math.sin(rad);
-		values[2][2] = (int) Math.cos(rad);
+		values[1][1] = Math.cos(rad);
+		values[1][2] = Math.sin(rad);
+		values[2][1] = -1 * values[1][2];
+		values[2][2] = values[1][1];
 	}
 	
 	/**
@@ -44,24 +44,25 @@ public class Matrix4x4 extends Matrix {
 	 */
 	public void rotateZ(double rotation) {
 		double rad = (rotation * (Math.PI/180));
-		values[0][0] = (int) Math.cos(rad);
-		values[1][0] = (int) Math.sin(rad);
-		values[0][1] = -1 * (int) Math.sin(rad);
-		values[1][1] = (int) Math.cos(rad);
+		values[0][0] = Math.cos(rad);
+		values[1][0] = Math.sin(rad);
+		values[0][1] = -1 * values[1][0];
+		values[1][1] = values[0][0];
 	}
 	
 	public void projectPerspective(double fov, double aspect, double near, double far) {
-		double rad = (fov * (Math.PI/180))/2;
+		double rad = (fov/2) * (Math.PI/180);
 		double zoomy = 1 / Math.tan(rad);
 		double zoomx = zoomy / aspect;
 		double c = (far + near) / (far - near);
 		double d = (-2 * far * near) / (far - near);
 		
-		values[0][0] = (int) zoomx;
-		values[1][1] = (int) zoomy;
-		values[2][2] = (int) c;
-		values[2][3] = (int) d;
+		values[0][0] = zoomx;
+		values[1][1] = zoomy;
+		values[2][2] = c;
+		values[2][3] = d;
 		values[3][2] = 1;
+		values[3][3] = 0;
 	}
 	
 	public void projectOrtho(double left, double right, double bottom, double top, double near, double far) {
@@ -71,12 +72,12 @@ public class Matrix4x4 extends Matrix {
 		double d = -1 * (top + bottom) / (top - bottom);
 		double e = -1 * (far + near) / (far - near);
 		double f = -2 / (far - near);
-		values[0][0] = (int) a;
-		values[0][3] = (int) b;
-		values[1][1] = (int) c;
-		values[1][3] = (int) d;
-		values[2][2] = (int) e;
-		values[2][3] = (int) f;
+		values[0][0] = a;
+		values[0][3] = b;
+		values[1][1] = c;
+		values[1][3] = d;
+		values[2][2] = e;
+		values[2][3] = f;
 	}
 	
 	public Vector3D transform(Vector3D v) {
@@ -97,7 +98,7 @@ public class Matrix4x4 extends Matrix {
 	public Matrix4x4 join(Matrix4x4 B) {
 		assert(this.columns == B.rows);
 		Matrix4x4 A = new Matrix4x4();
-		int value;
+		double value;
 		for (int i = 0; i < SIZE; i++) {
 			for (int j = 0; j < SIZE; j++) {
 				value = 0;

@@ -27,10 +27,10 @@ public class Matrix3x3 extends Matrix {
 	
 	public void screen(int width, int height) {
 		double w = width / 2, h = height / 2;
-		values[0][0] = (int) w;
-		values[1][1] = (int) h * -1;
-		values[0][2] = (int) w;
-		values[1][2] = (int) h;
+		values[0][0] = w;
+		values[1][1] = h * -1;
+		values[0][2] = w;
+		values[1][2] = h;
 	}
 
 }

@@ -91,5 +91,30 @@ public class Vector {
 	public int getDimension() {
 		return dimension;
 	}
+	
+	public boolean equals(Vector v) {
+		if (this.dimension != v.dimension) {
+			return false;
+		}
+		for (int i = 0; i < this.dimension; i++) {
+			if (this.values[i] != v.values[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public String toString() {
+		StringBuilder ss = new StringBuilder();
+		ss.append("(");
+		for (int i = 0; i < this.dimension; i++) {
+			ss.append(values[i]);
+			if (i < this.dimension - 1) {
+				ss.append(", ");
+			}
+		}
+		ss.append(")");
+		return ss.toString();
+	}
 
 }

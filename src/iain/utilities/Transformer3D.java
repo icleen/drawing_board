@@ -1,5 +1,6 @@
 package iain.utilities;
 
+import java.util.ArrayList;
 import java.util.Observable;
 
 import cs355.model.scene.Point3D;
@@ -12,6 +13,8 @@ public class Transformer3D  extends Observable {
 	private Matrix3x3 screen;
 	private Matrix4x4 combined;
 	
+	private ArrayList<Matrix4x4> stack;
+	
 	public static final Transformer3D SINGLETON = new Transformer3D();
 	
 	private Transformer3D() {
@@ -20,31 +23,28 @@ public class Transformer3D  extends Observable {
 		projection = new Matrix4x4();
 		screen = new Matrix3x3();
 		screen(Transformer.DEFAULT_SCREEN_SIZE, Transformer.DEFAULT_SCREEN_SIZE);
+		stack = new ArrayList<>();
 		combineMatrices();
 	}
 	
 	public void translate(double x, double y, double z) {
 		translation.loadIdentity();
-		translation.translate((int) x,(int) y,(int) z);
-		combineMatrices();
+		translation.translate(-x, -y, -z);
 	}
 	
 	public void rotate(double rotation) {
 		this.rotation.loadIdentity();
 		this.rotation.rotateY(rotation);
-		combineMatrices();
 	}
 	
 	public void perspective(double fov, double aspect, double near, double far) {
 		this.projection.loadIdentity();
 		this.projection.projectPerspective(fov, aspect, near, far);
-		combineMatrices();
 	}
 	
 	public void orthographic(double left, double right, double bottom, double top, double near, double far) {
 		this.projection.loadIdentity();
 		this.projection.projectOrtho(left, right, bottom, top, near, far);
-		combineMatrices();
 	}
 	
 	public void screen(int width, int height) {
@@ -65,12 +65,13 @@ public class Transformer3D  extends Observable {
 			return null;
 		}
 		double w = s.getValue(3);
-		double[] a = {s.getValue(0)/w, s.getValue(1)/w, s.getValue(2)/w};
-		double[] b = {e.getValue(0)/w, e.getValue(1)/w, e.getValue(2)/w};
+		double w2 = e.getValue(3);
+		double[] a = {s.getValue(0)/w, s.getValue(1)/w, 1};
+		double[] b = {e.getValue(0)/w2, e.getValue(1)/w2, 1};
 		Vector one = new Vector(3, a), two = new Vector(3, b);
 		one = screen.transform(one);
 		two = screen.transform(two);
-		int[] result = {(int) one.getValue(0),(int) one.getValue(1),(int) two.getValue(0),(int) two.getValue(1)};
+		int[] result = {(int) (one.getValue(0) + 0.5),(int) (one.getValue(1) + 0.5),(int) (two.getValue(0) + 0.5),(int) (two.getValue(1) + 0.5)};
 		return result;
 	}
 	
@@ -97,8 +98,30 @@ public class Transformer3D  extends Observable {
 		return true;
 	}
 	
-	private void combineMatrices() {
-		combined = projection.join(rotation.join(translation));
+	public void combineMatrices() {
+		Matrix4x4 temp = new Matrix4x4();
+		for (int i = 0; i < stack.size(); i++) {
+			temp = temp.join(stack.get(i));
+		}
+		combined = projection.join(rotation.join(translation.join(temp)));
+	}
+	
+	public void pushTranslate(double x, double y, double z) {
+		Matrix4x4 trans = new Matrix4x4();
+		trans.translate(x, y, z);
+		stack.add(trans);
+	}
+	
+	public void pushRotate(double rotation) {
+		Matrix4x4 rot = new Matrix4x4();
+		rot.rotateY(rotation);
+		stack.add(rot);
+	}
+	
+	public void popMatrix() {
+		if (stack.size() == 0) 
+			return;
+		stack.remove(stack.size() - 1);
 	}
 
 }

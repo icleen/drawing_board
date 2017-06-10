@@ -32,9 +32,34 @@ import cs355.model.scene.CS355Scene;
 import iain.model.Model;
 import iain.model.SaveStructure;
 import iain.utilities.Transformer;
+import iain.utilities.Transformer3D;
 import iain.view.Draw3D;
 
 public class Controller implements CS355Controller {
+	
+	private double rotationX;
+	private double rotationY;
+	private double rotationZ;
+	private double translationX;
+	private double translationY;
+	private double translationZ;
+	
+	private final int FAR = 500;
+	private final int NEAR = 1;
+	
+	private final int KEY_A = 65;
+	private final int KEY_S = 83;
+	private final int KEY_D = 68;
+	private final int KEY_Q = 81;
+	private final int KEY_W = 87;
+	private final int KEY_E = 69;
+	private final int KEY_R = 82;
+	private final int KEY_F = 70;
+	private final int KEY_H = 72;
+	private final int KEY_O = 79;
+	private final int KEY_P = 80;
+	
+	private final int CHANGE_AMOUNT = 2;
 	
 	private static Gson gson = new Gson();
 	
@@ -298,6 +323,11 @@ public class Controller implements CS355Controller {
 			drawMode3D = false;
 		}else {
 			drawMode3D = true;
+			setDefaultPosition();
+			Transformer3D.SINGLETON.perspective(25, 1, NEAR, FAR);
+			Transformer3D.SINGLETON.rotate(rotationY);
+			Transformer3D.SINGLETON.translate(translationX, translationY, translationZ);
+            Transformer3D.SINGLETON.combineMatrices();
 		}
 		Draw3D.SINGLETON.setDrawMode(drawMode3D);
 	}
@@ -305,7 +335,63 @@ public class Controller implements CS355Controller {
 	@Override
 	public void keyPressed(Iterator<Integer> iterator) {
 		if (drawMode3D) {
-			
+			boolean changed = false;
+			int key = 0;
+			while (iterator.hasNext()) {
+				key = iterator.next();
+				if(key == KEY_W) {
+		        	double value = rotationY * Math.PI / 180;
+		            translationZ += Math.cos(value) * CHANGE_AMOUNT;
+		            translationX -= Math.sin(value) * CHANGE_AMOUNT;
+		            changed = true;
+		        }if(key == KEY_S) {
+		        	double value = rotationY * Math.PI / 180;
+		            translationZ -= Math.cos(value) * CHANGE_AMOUNT;
+		            translationX += Math.sin(value) * CHANGE_AMOUNT;
+		            changed = true;
+		        }if(key == KEY_A) {
+		        	double value = rotationY * Math.PI / 180;
+		            translationZ -= Math.sin(value) * CHANGE_AMOUNT;
+		            translationX -= Math.cos(value) * CHANGE_AMOUNT;
+		            changed = true;
+		        }if(key == KEY_D) {
+		        	double value = rotationY * Math.PI / 180;
+		            translationZ += Math.sin(value) * CHANGE_AMOUNT;
+		            translationX += Math.cos(value) * CHANGE_AMOUNT;
+		            changed = true;
+		        }if(key == KEY_R) {
+		            translationY += CHANGE_AMOUNT;
+		            changed = true;
+		        }if(key == KEY_F) {
+		            translationY -= CHANGE_AMOUNT;
+		            changed = true;
+		        }if (key == KEY_Q) {
+		        	rotationY += CHANGE_AMOUNT;
+		        	rotationY %= 360;
+		        	changed = true;
+		        }if (key == KEY_E) {
+		        	rotationY -= CHANGE_AMOUNT;
+		        	rotationY %= 360;
+		        	changed = true;
+		        }if (key == KEY_P) {
+		        	Transformer3D.SINGLETON.perspective(25, 1, NEAR, FAR);
+		        	changed = true;
+		        }if (key == KEY_O) {
+		        	Transformer3D.SINGLETON.orthographic(-30.0, 30.0, -30.0, 30.0, NEAR, FAR);
+		        	changed = true;
+		        }if (key == KEY_H) {
+		        	setDefaultPosition();
+		        	changed = true;
+		        }
+			}
+	        if(changed) {
+//				System.out.println("translation: " + translationX + ", " + translationY + ", " + translationZ + ", rotation: " + rotationY);
+	            Transformer3D.SINGLETON.translate(translationX, translationY, translationZ);
+	            Transformer3D.SINGLETON.rotate(rotationY);
+	            Transformer3D.SINGLETON.combineMatrices();
+	            Draw3D.SINGLETON.setDrawMode(drawMode3D);
+	    		changed = false;
+	        }
 		}
 	}
 
@@ -438,5 +524,14 @@ public class Controller implements CS355Controller {
 			currentIndex = currentShape.getIndex();
 		}
 	}
+	
+    private void setDefaultPosition() {
+    	rotationX = 0;
+		rotationY = 0;
+		rotationZ = 0;
+		translationX = 0;
+		translationY = 3;
+		translationZ = -50;
+    }
 
 }

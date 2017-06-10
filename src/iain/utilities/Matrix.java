@@ -2,12 +2,12 @@ package iain.utilities;
 
 public class Matrix {
 	
-	protected int[][] values;
+	protected double[][] values;
 	protected int rows;
 	protected int columns;
 	
 	public Matrix(int row, int column) {
-		values = new int[row][column];
+		values = new double[row][column];
 		rows = row;
 		columns = column;
 		loadIdentity();
@@ -26,7 +26,7 @@ public class Matrix {
 		}
 	}
 	
-	public void translate(int[] val) {
+	public void translate(double[] val) {
 		int index = columns - 1;
 		for (int i = 0; i < rows - 1; i++) {
 			values[i][index] = val[i];
@@ -51,7 +51,7 @@ public class Matrix {
 	public Matrix join(Matrix B) {
 		assert(this.columns == B.rows);
 		Matrix A = new Matrix(this.rows, B.columns);
-		int value;
+		double value;
 		for (int i = 0; i < this.rows; i++) {
 			for (int j = 0; j < B.columns; j++) {
 				value = 0;
@@ -62,6 +62,31 @@ public class Matrix {
 			}
 		}
 		return A;
+	}
+	
+	public String toString() {
+		StringBuilder ss = new StringBuilder();
+		for (int i = 0; i < this.rows; i++) {
+			for (int j = 0; j < this.columns; j++) {
+				ss.append(" " + values[i][j]);
+			}
+			ss.append("\n");
+		}
+		return ss.toString();
+	}
+	
+	public boolean equals(Matrix B) {
+		if (this.rows != B.rows || this.columns != B.columns) {
+			return false;
+		}
+		for (int i = 0; i < this.rows; i++) {
+			for (int j = 0; j < this.columns; j++) {
+				if (this.values[i][j] != B.values[i][j]) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 }
