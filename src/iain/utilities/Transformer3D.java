@@ -22,7 +22,7 @@ public class Transformer3D  extends Observable {
 		translation = new Matrix4x4();
 		projection = new Matrix4x4();
 		screen = new Matrix3x3();
-		screen(Transformer.DEFAULT_SCREEN_SIZE, Transformer.DEFAULT_SCREEN_SIZE);
+		screen(Transformer.LARGEST_SCREEN_SIZE, Transformer.LARGEST_SCREEN_SIZE);
 		stack = new ArrayList<>();
 		combineMatrices();
 	}

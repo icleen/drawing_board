@@ -110,7 +110,7 @@ public class View implements ViewRefresher {
 			}
 		}
 		selected = null;
-		g2d.setTransform(new AffineTransform());
+		g2d.setTransform(Transformer.inst().worldToView());
 		Draw3D.SINGLETON.draw(g2d);
 	}
 
