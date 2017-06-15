@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Observable;
 
@@ -27,8 +28,11 @@ public class View implements ViewRefresher {
 	
 	private Shape selected;
 	
+	private BufferedImage img;
+	
 	public View() {
 		Model.SINGLETON.addObserver(this);
+		Image.SINGLETON.addObserver(this);
 		Transformer.inst().addObserver(this);
 		Transformer3D.SINGLETON.addObserver(this);
 		Draw3D.SINGLETON.addObserver(this);
@@ -42,6 +46,16 @@ public class View implements ViewRefresher {
 
 	@Override
 	public void refreshView(Graphics2D g2d) {
+		System.out.println("refresh");
+		if (Image.SINGLETON.hasChanged()) {
+			img = Image.SINGLETON.getImage();
+			System.out.println("got image");
+		}
+		if (img != null && Image.SINGLETON.getDrawMode()) {
+			g2d.setTransform(Transformer.inst().worldToView());
+			g2d.drawImage(img, null, ORIGIN, ORIGIN);
+		}
+		
 		List<Shape> shapes = Model.SINGLETON.getShapes();
 		Shape.SHAPE_TYPE type = null;
 		AffineTransform objToView = null;

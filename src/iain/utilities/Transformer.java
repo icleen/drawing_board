@@ -11,7 +11,7 @@ public class Transformer extends Observable {
 	
 	
 	private static Transformer SINGLETON = new Transformer();
-	private static final double DEFAULT_ZOOM = 1;
+	private static final double DEFAULT_ZOOM = 0.25;
 	public static final int DEFAULT_SCREEN_SIZE = 512;
 	public static final int LARGEST_SCREEN_SIZE = 2048;
 	

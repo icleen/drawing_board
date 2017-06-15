@@ -65,21 +65,6 @@ public class Matrix4x4 extends Matrix {
 		values[3][3] = 0;
 	}
 	
-	public void projectOrtho(double left, double right, double bottom, double top, double near, double far) {
-		double a = 2 / (right - left);
-		double b = -1 * (right + left) / (right - left);
-		double c = 2 / (top - bottom);
-		double d = -1 * (top + bottom) / (top - bottom);
-		double e = -1 * (far + near) / (far - near);
-		double f = -2 / (far - near);
-		values[0][0] = a;
-		values[0][3] = b;
-		values[1][1] = c;
-		values[1][3] = d;
-		values[2][2] = e;
-		values[2][3] = f;
-	}
-	
 	public Vector3D transform(Vector3D v) {
 		assert(values[0].length == v.getDimension());
 		Vector3D result = new Vector3D();

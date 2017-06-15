@@ -28,12 +28,14 @@ import cs355.model.drawing.Rectangle;
 import cs355.model.drawing.Shape;
 import cs355.model.drawing.Square;
 import cs355.model.drawing.Triangle;
+import cs355.model.image.CS355Image;
 import cs355.model.scene.CS355Scene;
 import iain.model.Model;
 import iain.model.SaveStructure;
 import iain.utilities.Transformer;
 import iain.utilities.Transformer3D;
 import iain.view.Draw3D;
+import iain.view.Image;
 
 public class Controller implements CS355Controller {
 	
@@ -72,6 +74,7 @@ public class Controller implements CS355Controller {
 	
 	public static CS355Scene scene = new CS355Scene();
 	private boolean drawMode3D;
+	private boolean imageMode;
 	
 	private STATES currentState;
 	private Color currentColor;
@@ -85,6 +88,7 @@ public class Controller implements CS355Controller {
 		currentState = STATES.select;
 		currentColor = Color.WHITE;
 		drawMode3D = false;
+		imageMode = false;
 //		GUIFunctions.changeSelectedColor(currentColor);
 	}
 	
@@ -373,12 +377,6 @@ public class Controller implements CS355Controller {
 		        	rotationY -= CHANGE_AMOUNT;
 		        	rotationY %= 360;
 		        	changed = true;
-		        }if (key == KEY_P) {
-		        	Transformer3D.SINGLETON.perspective(25, 1, NEAR, FAR);
-		        	changed = true;
-		        }if (key == KEY_O) {
-		        	Transformer3D.SINGLETON.orthographic(-30.0, 30.0, -30.0, 30.0, NEAR, FAR);
-		        	changed = true;
 		        }if (key == KEY_H) {
 		        	setDefaultPosition();
 		        	changed = true;
@@ -393,24 +391,6 @@ public class Controller implements CS355Controller {
 	    		changed = false;
 	        }
 		}
-	}
-
-	@Override
-	public void openImage(File file) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void saveImage(File file) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void toggleBackgroundDisplay() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -449,6 +429,32 @@ public class Controller implements CS355Controller {
 			currentIndex = -1;
 			Model.SINGLETON.deselect();
 		}
+	}
+	
+	@Override
+	public void openImage(File file) {
+		Image.SINGLETON.open(file);
+		System.out.println("opened");
+		Image.SINGLETON.setChanged();
+		Image.SINGLETON.setDrawMode(imageMode);
+		System.out.println("notified");
+	}
+
+	@Override
+	public void saveImage(File file) {
+		Image.SINGLETON.save(file);
+		Image.SINGLETON.setChanged();
+		Image.SINGLETON.setDrawMode(imageMode);
+	}
+
+	@Override
+	public void toggleBackgroundDisplay() {
+		if (imageMode) {
+			imageMode = false;
+		}else {
+			imageMode = true;
+		}
+		Image.SINGLETON.setDrawMode(imageMode);
 	}
 
 	@Override
@@ -489,8 +495,8 @@ public class Controller implements CS355Controller {
 
 	@Override
 	public void doChangeBrightness(int brightnessAmountNum) {
-		// TODO Auto-generated method stub
-
+		Image.SINGLETON.brightness(brightnessAmountNum);
+//		Image.SINGLETON.setDrawMode(imageMode);
 	}
 
 	@Override

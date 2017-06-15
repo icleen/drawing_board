@@ -42,11 +42,6 @@ public class Transformer3D  extends Observable {
 		this.projection.projectPerspective(fov, aspect, near, far);
 	}
 	
-	public void orthographic(double left, double right, double bottom, double top, double near, double far) {
-		this.projection.loadIdentity();
-		this.projection.projectOrtho(left, right, bottom, top, near, far);
-	}
-	
 	public void screen(int width, int height) {
 		screen.screen(width, height);
 	}
@@ -64,10 +59,8 @@ public class Transformer3D  extends Observable {
 		if (!inBounds(s, e)) {
 			return null;
 		}
-		double w = s.getValue(3);
-		double w2 = e.getValue(3);
-		double[] a = {s.getValue(0)/w, s.getValue(1)/w, 1};
-		double[] b = {e.getValue(0)/w2, e.getValue(1)/w2, 1};
+		double[] a = {s.getValue(0)/s.getValue(3), s.getValue(1)/s.getValue(3), 1};
+		double[] b = {e.getValue(0)/e.getValue(3), e.getValue(1)/e.getValue(3), 1};
 		Vector one = new Vector(3, a), two = new Vector(3, b);
 		one = screen.transform(one);
 		two = screen.transform(two);
