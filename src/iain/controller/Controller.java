@@ -459,38 +459,32 @@ public class Controller implements CS355Controller {
 
 	@Override
 	public void doEdgeDetection() {
-		// TODO Auto-generated method stub
-
+		Image.SINGLETON.edgeDetection();
 	}
 
 	@Override
 	public void doSharpen() {
-		// TODO Auto-generated method stub
-
+		Image.SINGLETON.sharpen();
 	}
 
 	@Override
 	public void doMedianBlur() {
-		// TODO Auto-generated method stub
-
+		Image.SINGLETON.medianBlur();
 	}
 
 	@Override
 	public void doUniformBlur() {
-		// TODO Auto-generated method stub
-
+		Image.SINGLETON.uniformBlur();
 	}
 
 	@Override
 	public void doGrayscale() {
-		// TODO Auto-generated method stub
-
+		Image.SINGLETON.grayscale();
 	}
 
 	@Override
 	public void doChangeContrast(int contrastAmountNum) {
-		// TODO Auto-generated method stub
-
+		Image.SINGLETON.contrast(contrastAmountNum);
 	}
 
 	@Override

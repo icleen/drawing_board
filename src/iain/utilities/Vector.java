@@ -116,5 +116,13 @@ public class Vector {
 		ss.append(")");
 		return ss.toString();
 	}
+	
+	public static double getSquaredLength(int[] a) {
+		int total = 0;
+		for (int i = 0; i < a.length; i++) {
+			total += a[i] * a[i];
+		}
+		return total;
+	}
 
 }

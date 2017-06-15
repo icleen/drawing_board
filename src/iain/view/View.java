@@ -26,6 +26,9 @@ public class View implements ViewRefresher {
 	private static final int LINE_SIZE = 1;
 	private static final int ORIGIN = 0;
 	
+	private static final int CENTER_X = 2048/2;
+	private static final int CENTER_Y = 2048/2;
+	
 	private Shape selected;
 	
 	private BufferedImage img;
@@ -53,7 +56,7 @@ public class View implements ViewRefresher {
 		}
 		if (img != null && Image.SINGLETON.getDrawMode()) {
 			g2d.setTransform(Transformer.inst().worldToView());
-			g2d.drawImage(img, null, ORIGIN, ORIGIN);
+			g2d.drawImage(img, null, CENTER_X - Image.SINGLETON.getWidth()/2, CENTER_Y - Image.SINGLETON.getHeight()/2);
 		}
 		
 		List<Shape> shapes = Model.SINGLETON.getShapes();
