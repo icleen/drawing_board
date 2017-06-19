@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 
+import cs355.GUIFunctions;
 import cs355.model.image.CS355Image;
 import iain.utilities.Vector;
 
@@ -13,7 +14,7 @@ public class Image extends CS355Image {
 	private boolean changed;
 	private boolean drawMode;
 	
-	private final double BLUR_FACTOR = 0.5;
+	private final double BLUR_FACTOR = 1;
 	
 	public static Image SINGLETON = new Image();
 	
@@ -58,19 +59,17 @@ public class Image extends CS355Image {
 		
 		int width = this.getWidth(), height = this.getHeight();
 		Image replacement = new Image(width, height);
-		double r_tot, g_tot, b_tot;
-		double r_tot2, g_tot2, b_tot2;
+		double res, sobX, sobY;
 		int[] rgb = new int[3];
 		float[] hsb = new float[3];
 		int a, b;
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				r_tot = 0;
-				g_tot = 0;
-				b_tot = 0;
-				r_tot2 = 0;
-				g_tot2 = 0;
-				b_tot2 = 0;
+				res = 0;
+				sobX = 0;
+				sobY = 0;
+				rgb = this.getPixel(x, y, rgb);
+				Color.RGBtoHSB(rgb[0], rgb[1], rgb[2], hsb);
 				
 				for (int i = -1; i <= 1; i++) {
 					for (int j = -1; j <= 1; j++) {
@@ -85,26 +84,26 @@ public class Image extends CS355Image {
 						}if (b >= height) {
 							b = height - 1;
 						}
-						r_tot += this.getRed(a, b) * kernel[i + 1][j + 1];
-						g_tot += this.getGreen(a, b) * kernel[i + 1][j + 1];
-						b_tot += this.getBlue(a, b) * kernel[i + 1][j + 1];
-						r_tot2 += this.getRed(a, b) * kernel2[i + 1][j + 1];
-						g_tot2 += this.getGreen(a, b) * kernel2[i + 1][j + 1];
-						b_tot2 += this.getBlue(a, b) * kernel2[i + 1][j + 1];
+						rgb = this.getPixel(a, b, rgb);
+						Color.RGBtoHSB(rgb[0], rgb[1], rgb[2], hsb);
+						sobX += hsb[2] * kernel[i + 1][j + 1];
+						sobY += hsb[2] * kernel[i + 1][j + 1];
 					}
 				}
-				r_tot += r_tot2;
-				g_tot += g_tot2;
-				b_tot += b_tot2;
-				r_tot /= 8;
-				g_tot /= 8;
-				b_tot /= 8;
+				sobX /= 8;
+				sobY /= 8;
+				res = Math.sqrt((sobX * sobX) + (sobY * sobY));
+				if (x < 1 && y < 1) {
+					System.out.println(res);
+				}
+				res *= 255;
+				if (x < 1 && y < 1) {
+					System.out.println(res);
+				}
 				
-				
-				
-				replacement.setRed(x, y, (int) r_tot);
-				replacement.setGreen(x, y, (int) g_tot);
-				replacement.setBlue(x, y, (int) b_tot);
+				replacement.setRed(x, y, (int) res);
+				replacement.setGreen(x, y, (int) res);
+				replacement.setBlue(x, y, (int) res);
 			}
 		}
 		this.setPixels(replacement);
@@ -284,6 +283,10 @@ public class Image extends CS355Image {
 						b_tot += this.getBlue(a, b) * BLUR_FACTOR;
 					}
 				}
+				r_tot /= 9;
+				g_tot /= 9;
+				b_tot /= 9;
+				
 				if (r_tot > 255) {
 					r_tot = 255;
 				}if (g_tot > 255) {
@@ -342,9 +345,9 @@ public class Image extends CS355Image {
 
 	@Override
 	public void contrast(int amount) {
-		float c = (float) (amount * 1.0000);
-		double pwr = Math.pow( ((c + 100)/100), 4 );
-		System.out.println("start contrast: " + c);
+		float c = (float) (amount / 1.0000);
+		double pwr = Math.pow( ((c + 100.0)/100.0), 4 );
+		System.out.println("start contrast: " + pwr);
 		int[] rgb = new int[3];
 		float[] hsb = new float[3];
 		int width = this.getWidth(), height = this.getHeight();
@@ -355,7 +358,13 @@ public class Image extends CS355Image {
 				rgb = this.getPixel(x, y, rgb);
 				Color.RGBtoHSB(rgb[0], rgb[1], rgb[2], hsb);
 				
-				hsb[2] = (float) (pwr * (hsb[2] - 128) + 128);
+				hsb[2] = (float) (pwr * (hsb[2] - 0.5) + 0.5);
+				
+				if (hsb[2] > 1) {
+					hsb[2] = 1;
+				}if (hsb[2] < 0) {
+					hsb[2] = 0;
+				}
 				
 				color = Color.getHSBColor(hsb[0], hsb[1], hsb[2]);
 				rgb[0] = color.getRed();
@@ -391,8 +400,8 @@ public class Image extends CS355Image {
 				hsb[2] = temp/100;
 				if (hsb[2] > 1) {
 					hsb[2] = 1;
-				}if (hsb[2] < -1) {
-					hsb[2] = -1;
+				}if (hsb[2] < 0) {
+					hsb[2] = 0;
 				}
 				
 				color = Color.getHSBColor(hsb[0], hsb[1], hsb[2]);
@@ -432,15 +441,13 @@ public class Image extends CS355Image {
 	}
 	
 	public boolean hasChanged() {
-		if (changed) {
-			changed = false;
-			return true;
-		}
-		return false;
+		return changed;
 	}
 	
-	public void setChanged() {
-		changed = true;
+	public void setChanged(boolean c) {
+		changed = c;
+		this.setChanged();
+		this.notifyObservers();
 	}
 	
 	public boolean getDrawMode() {

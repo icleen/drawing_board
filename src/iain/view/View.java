@@ -52,7 +52,7 @@ public class View implements ViewRefresher {
 		System.out.println("refresh");
 		if (Image.SINGLETON.hasChanged()) {
 			img = Image.SINGLETON.getImage();
-			System.out.println("got image");
+//			System.out.println("got image");
 		}
 		if (img != null && Image.SINGLETON.getDrawMode()) {
 			g2d.setTransform(Transformer.inst().worldToView());

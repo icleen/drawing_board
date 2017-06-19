@@ -434,17 +434,15 @@ public class Controller implements CS355Controller {
 	@Override
 	public void openImage(File file) {
 		Image.SINGLETON.open(file);
-		System.out.println("opened");
-		Image.SINGLETON.setChanged();
-		Image.SINGLETON.setDrawMode(imageMode);
-		System.out.println("notified");
+		Image.SINGLETON.setChanged(true);
+//		GUIFunctions.changeSelectedColor(currentColor);
 	}
 
 	@Override
 	public void saveImage(File file) {
 		Image.SINGLETON.save(file);
-		Image.SINGLETON.setChanged();
-		Image.SINGLETON.setDrawMode(imageMode);
+		Image.SINGLETON.setChanged(true);
+//		GUIFunctions.changeSelectedColor(currentColor);
 	}
 
 	@Override
@@ -490,7 +488,6 @@ public class Controller implements CS355Controller {
 	@Override
 	public void doChangeBrightness(int brightnessAmountNum) {
 		Image.SINGLETON.brightness(brightnessAmountNum);
-//		Image.SINGLETON.setDrawMode(imageMode);
 	}
 
 	@Override
